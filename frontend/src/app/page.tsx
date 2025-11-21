@@ -1,13 +1,29 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { AnalysisForm } from '@/components/analysis/AnalysisForm';
+import { AnalysesList } from '@/components/analysis/AnalysisList';
 
 export default function Home() {
+  const router = useRouter();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleAnalysisSuccess = (analysisId: string) => {
+    setShowForm(false);
+    setRefreshTrigger(prev => prev + 1);
+    router.push(`/analysis/${analysisId}`);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
             LIGHTHOUSE
           </h1>
@@ -15,15 +31,31 @@ export default function Home() {
             AI-Powered GitHub Repository Analyzer
           </p>
           <div className="flex justify-center gap-4">
-            <Link href="/analysis/new">
-              <Button size="lg">Start Analysis</Button>
-            </Link>
-            <Link href="/api/v1/health">
+            <Button size="lg" onClick={() => setShowForm(!showForm)}>
+              {showForm ? 'Hide Form' : 'New Analysis'}
+            </Button>
+            <a href="http://localhost:3001/api/v1/health" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="lg">
                 API Health
               </Button>
-            </Link>
+            </a>
           </div>
+        </div>
+
+        {/* Analysis Form */}
+        {showForm && (
+          <div className="max-w-2xl mx-auto mb-12">
+            <AnalysisForm
+              onSuccess={handleAnalysisSuccess}
+              onError={(error) => console.error(error)}
+            />
+          </div>
+        )}
+
+        {/* Recent Analyses */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold mb-6">Recent Analyses</h2>
+          <AnalysesList refreshTrigger={refreshTrigger} />
         </div>
 
         {/* Features */}

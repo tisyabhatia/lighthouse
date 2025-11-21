@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ANALYSIS
+// ============================================================================
+
+model Analysis {
+  id            String   @id @default(cuid())
+  repositoryUrl String   @map("repository_url")
+  owner         String
+  name          String
+  branch        String
+  commitSha     String?  @map("commit_sha")
+  status        String   @default("queued") // queued, processing, completed, failed, cancelled
+  error         String?
+
+  // Options
+  options       Json     @default("{}")
+
+  // Timestamps
+  createdAt     DateTime @default(now()) @map("created_at")
+  startedAt     DateTime? @map("started_at")
+  completedAt   DateTime? @map("completed_at")
+
+  // Relationships
+  fileTree      FileTree?
+  dependencies  Dependency[]
+  summaries     Summary[]
+  impactAnalysis ImpactAnalysis?
+  onboarding    OnboardingGuide?
+
+  @@index([status])
+  @@index([repositoryUrl])
+  @@index([createdAt])
+  @@map("analyses")
+}
+
+// ============================================================================
+// FILE TREE
+// ============================================================================
+
+model FileTree {
+  id            String   @id @default(cuid())
+  analysisId    String   @unique @map("analysis_id")
+  analysis      Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Tree structure stored as JSON
+  tree          Json
+
+  // Statistics
+  totalFiles        Int @map("total_files")
+  totalDirectories  Int @map("total_directories")
+  totalLines        Int @map("total_lines")
+  totalSize         BigInt @map("total_size")
+  languageBreakdown Json @map("language_breakdown")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("file_trees")
+}
+
+// ============================================================================
+// DEPENDENCIES
+// ============================================================================
+
+model Dependency {
+  id            String   @id @default(cuid())
+  analysisId    String   @map("analysis_id")
+  analysis      Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Graph data stored as JSON for flexibility
+  nodes         Json
+  edges         Json
+  metadata      Json
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([analysisId])
+  @@map("dependencies")
+}
+
+// ============================================================================
+// SUMMARIES
+// ============================================================================
+
+model Summary {
+  id            String   @id @default(cuid())
+  analysisId    String   @map("analysis_id")
+  analysis      Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  type          String   // file, function, class
+  path          String
+  name          String
+  summary       String   @db.Text
+  purpose       String   @db.Text
+  keyConcepts   Json     @map("key_concepts")
+  complexity    String   // low, medium, high
+  lineStart     Int      @map("line_start")
+  lineEnd       Int      @map("line_end")
+  tokensUsed    Int?     @map("tokens_used")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([analysisId])
+  @@index([type])
+  @@index([path])
+  @@map("summaries")
+}
+
+// ============================================================================
+// IMPACT ANALYSIS
+// ============================================================================
+
+model ImpactAnalysis {
+  id            String   @id @default(cuid())
+  analysisId    String   @unique @map("analysis_id")
+  analysis      Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Impact data stored as JSON
+  criticalFiles Json     @map("critical_files")
+  impactMatrix  Json     @map("impact_matrix")
+  changeHotspots Json    @map("change_hotspots")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("impact_analyses")
+}
+
+// ============================================================================
+// ONBOARDING GUIDE
+// ============================================================================
+
+model OnboardingGuide {
+  id            String   @id @default(cuid())
+  analysisId    String   @unique @map("analysis_id")
+  analysis      Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Guide data stored as JSON
+  overview          Json
+  entryPoints       Json     @map("entry_points")
+  readingOrder      Json     @map("reading_order")
+  keyDirectories    Json     @map("key_directories")
+  setupInstructions Json     @map("setup_instructions")
+  commonTasks       Json     @map("common_tasks")
+  glossary          Json?
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("onboarding_guides")
+}

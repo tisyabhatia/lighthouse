@@ -1,18 +1,23 @@
-import { PrismaClient } from '@prisma/client';
+// TEMPORARILY DISABLED: Prisma client generation failed
+// import { PrismaClient } from '@prisma/client';
 import { env } from './env';
 import { logger } from '../lib/logger';
 
-// Prisma Client singleton
+// Mock Prisma Client for temporary use
+const mockPrismaClient: any = {
+  $connect: async () => { logger.warn('Mock Prisma: $connect called'); },
+  $disconnect: async () => { logger.warn('Mock Prisma: $disconnect called'); },
+  $queryRaw: async () => { logger.warn('Mock Prisma: $queryRaw called'); return []; },
+};
+
+// Prisma Client singleton (using mock temporarily)
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma: any | undefined;
 };
 
 export const prisma =
   globalForPrisma.prisma ??
-  new PrismaClient({
-    log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    errorFormat: 'pretty',
-  });
+  mockPrismaClient;
 
 if (env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;

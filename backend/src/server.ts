@@ -13,7 +13,9 @@ const app = createApp();
 async function startServer() {
   try {
     // Connect to database
-    await connectDatabase();
+    // TEMPORARILY DISABLED: Prisma binaries download issue
+    // await connectDatabase();
+    logger.warn('⚠️  Database connection disabled (Prisma setup pending)');
 
     // Validate AI configuration (warning only, not blocking)
     validateAIConfig();

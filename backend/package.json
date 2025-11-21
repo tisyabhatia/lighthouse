@@ -14,12 +14,18 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": ["github", "analyzer", "ai", "dependencies"],
+  "keywords": [
+    "github",
+    "analyzer",
+    "ai",
+    "dependencies"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",
     "@babel/parser": "^7.24.0",
+    "@octokit/rest": "^22.0.1",
     "@prisma/client": "^5.14.0",
     "@typescript-eslint/parser": "^7.10.0",
     "bullmq": "^5.7.0",

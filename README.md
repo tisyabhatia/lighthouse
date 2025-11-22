@@ -31,7 +31,7 @@ You should see `lighthouse-postgres` and `lighthouse-redis` both "healthy"
 
 **Step 4: Start Backend (Terminal 1)**
 ```powershell
-cd C:\Users\bhati\OneDrive\University of Washington\lighthouse\backend
+cd backend
 npm run dev
 ```
 Wait for: `🚀 Server started successfully` and `🌐 Port: 3001`

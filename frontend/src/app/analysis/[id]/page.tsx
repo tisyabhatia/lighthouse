@@ -1,16 +1,16 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { ProgressTracker } from '@/components/analysis/ProgressTracker';
 
 interface AnalysisPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default function AnalysisPage({ params }: AnalysisPageProps) {
-  const { id } = use(params);
+  const { id } = params;
   const [analysisComplete, setAnalysisComplete] = useState(false);
 
   return (

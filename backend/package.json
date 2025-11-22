@@ -5,8 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "dev:worker": "tsx watch src/workers/analysis.worker.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start:worker": "node dist/workers/analysis.worker.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
@@ -24,10 +26,10 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",
-    "@babel/parser": "^7.24.0",
+    "@babel/parser": "^7.28.5",
     "@octokit/rest": "^22.0.1",
     "@prisma/client": "^5.14.0",
-    "@typescript-eslint/parser": "^7.10.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "bullmq": "^5.7.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",

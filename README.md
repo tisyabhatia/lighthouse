@@ -2,55 +2,64 @@
 
 AI-powered GitHub repository analysis and onboarding guide generator.
 
-## Sprint 1 - Foundation Complete ✅
+# Startup
 
-This is the Sprint 1 foundation deliverable with complete backend and frontend infrastructure.
+## Prerequisites (One-time setup)
+- [ ] Docker Desktop installed and set to start on Windows login
+- [ ] Node.js installed
+- [ ] Backend `.env` file created (copy from `.env.example`)
 
-## Project Structure
+---
 
+## Daily Startup Steps
+
+**Step 1: Start Docker Desktop**
+- Open Docker Desktop from Start Menu
+- Wait for whale icon to stop animating (1-2 min)
+
+**Step 2: Start Database Containers**
+```powershell
+cd C:\Users\bhati\OneDrive\University of Washington\lighthouse\backend
+docker compose up -d
 ```
-lighthouse/
-├── backend/          # Node.js + TypeScript + Express + Prisma backend
-└── frontend/         # Next.js 14 + React + TailwindCSS frontend
+
+**Step 3: Verify Containers Running**
+```powershell
+docker ps
 ```
+You should see `lighthouse-postgres` and `lighthouse-redis` both "healthy"
 
-## Quick Start
-
-### Backend
-```bash
-cd backend
-npm install
-cp .env.example .env
-docker-compose up -d
+**Step 4: Start Backend (Terminal 1)**
+```powershell
+cd C:\Users\bhati\OneDrive\University of Washington\lighthouse\backend
 npm run dev
 ```
+Wait for: `🚀 Server started successfully` and `🌐 Port: 3001`
 
-### Frontend
-```bash
-cd frontend
-npm install
-cp .env.local.example .env.local
+**Step 5: Start Frontend (Terminal 2 - new window)**
+```powershell
+cd C:\Users\bhati\OneDrive\University of Washington\lighthouse\frontend
 npm run dev
 ```
+Wait for: `✓ Ready`
 
-Access:
+**Step 6: Open in Browser**
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
-- Health Check: http://localhost:3001/api/v1/health
+- Backend health check: http://localhost:3001/api/v1/health
 
-## Sprint 1 Deliverables ✅
+---
 
-All Sprint 1 requirements completed:
-- ✅ Backend project setup with TypeScript
-- ✅ Docker Compose (PostgreSQL + Redis)
-- ✅ Express API with middleware
-- ✅ Prisma schema and database config
-- ✅ Health check endpoint
-- ✅ Frontend Next.js 14 setup
-- ✅ TailwindCSS configuration
-- ✅ UI component library
-- ✅ Zustand state management
-- ✅ API client layer
-- ✅ Both projects compile successfully
+## Troubleshooting
 
-See full documentation in individual project folders.
+| Problem | Solution |
+|---------|----------|
+| "docker: error during connect" | Open Docker Desktop and wait for it to start |
+| Backend hangs after Redis connects | Run `npx prisma db push` then `npm run dev` |
+| Port 3000 in use | Stop other terminals, or frontend will use 3001 |
+| Database connection errors | Run `docker compose up -d` first |
+
+---
+
+## Shutdown Steps
+1. Ctrl+C in both terminals
+2. (Optional) Stop Docker containers: `docker-compose down`

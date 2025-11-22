@@ -195,23 +195,21 @@ export class AnalysisWorker {
   }
 }
 
-// Only start worker if this module is run directly (not imported)
-if (require.main === module) {
-  const worker = new AnalysisWorker();
-  logger.info('Analysis worker started');
+// Create worker instance
+const worker = new AnalysisWorker();
+logger.info('Analysis worker starting...');
 
-  // Graceful shutdown
-  process.on('SIGTERM', async () => {
-    logger.info('SIGTERM received, closing worker');
-    await worker.close();
-    process.exit(0);
-  });
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  logger.info('SIGTERM received, closing worker');
+  await worker.close();
+  process.exit(0);
+});
 
-  process.on('SIGINT', async () => {
-    logger.info('SIGINT received, closing worker');
-    await worker.close();
-    process.exit(0);
-  });
-}
+process.on('SIGINT', async () => {
+  logger.info('SIGINT received, closing worker');
+  await worker.close();
+  process.exit(0);
+});
 
-export const analysisWorker = new AnalysisWorker();
+export const analysisWorker = worker;

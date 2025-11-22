@@ -112,7 +112,7 @@ export default function Home() {
         {/* CTA */}
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            Sprint 1 Foundation - More features coming soon
+            More features coming soon
           </p>
         </div>
       </div>

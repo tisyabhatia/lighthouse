@@ -10,7 +10,7 @@ interface AnalysisPageProps {
 }
 
 export default function AnalysisPage({ params }: AnalysisPageProps) {
-  const { id } = use(params);
+  const { id } = params;
   const [analysisComplete, setAnalysisComplete] = useState(false);
 
   return (

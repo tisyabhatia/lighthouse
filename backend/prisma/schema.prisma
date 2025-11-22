@@ -90,6 +90,27 @@ model Dependency {
 }
 
 // ============================================================================
+// PARSED FILES
+// ============================================================================
+
+model ParsedFile {
+  id            String   @id @default(cuid())
+  analysisId    String   @map("analysis_id")
+  filePath      String   @map("file_path")
+  language      String
+
+  // Parsed data stored as JSON
+  data          Json
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([analysisId])
+  @@index([language])
+  @@unique([analysisId, filePath])
+  @@map("parsed_files")
+}
+
+// ============================================================================
 // SUMMARIES
 // ============================================================================
 

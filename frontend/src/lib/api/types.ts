@@ -67,3 +67,37 @@ export interface AnalysisListResponse {
   total: number;
   page: number;
 }
+
+// File Tree Types
+export interface FileTreeNode {
+  id: string;
+  name: string;
+  type: 'file' | 'directory';
+  path: string;
+  relativePath: string;
+  children?: FileTreeNode[];
+  metadata?: FileMetadata;
+}
+
+export interface FileMetadata {
+  language: string;
+  extension: string;
+  size: number;
+  linesOfCode: number;
+  isTest: boolean;
+  isConfig: boolean;
+  lastModified: string;
+}
+
+export interface FileTreeStatistics {
+  totalFiles: number;
+  totalDirectories: number;
+  totalLines: number;
+  totalSize: number;
+  languageBreakdown: Record<string, number>;
+}
+
+export interface FileTreeResponse {
+  tree: FileTreeNode;
+  statistics: FileTreeStatistics;
+}

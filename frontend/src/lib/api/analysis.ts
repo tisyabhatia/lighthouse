@@ -6,6 +6,7 @@ import type {
   AnalysisStatusResponse,
   AnalysisListResponse,
   HealthCheckResponse,
+  FileTreeResponse,
 } from './types';
 
 export const analysisApi = {
@@ -42,6 +43,11 @@ export const analysisApi = {
     return apiClient.delete(API_ENDPOINTS.ANALYSIS(id));
   },
 
+  // Get file tree
+  async getFileTree(id: string): Promise<FileTreeResponse> {
+    return apiClient.get<FileTreeResponse>(API_ENDPOINTS.ANALYSIS_TREE(id));
+  },
+
   // TODO: Add more endpoints in future sprints
-  // getFileTree, getDependencies, getSummaries, etc.
+  // getDependencies, getSummaries, etc.
 };

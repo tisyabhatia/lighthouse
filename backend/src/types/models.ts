@@ -48,30 +48,54 @@ export interface FileTreeStatistics {
 // PARSER MODELS
 // ============================================================================
 
+// Sprint 3 parser types (simplified versions)
+export interface ImportStatement {
+  source: string;
+  specifiers: Array<{ name: string; alias?: string }>;
+  isTypeOnly: boolean;
+}
+
+export interface ExportStatement {
+  name: string;
+  type: 'named' | 'default' | 'all';
+  source?: string;
+}
+
+export interface FunctionInfo {
+  name: string;
+  parameters: Array<{ name: string; type?: string }>;
+  returnType?: string;
+  isAsync: boolean;
+  isGenerator: boolean;
+  location: { start: number; end: number; line?: number; column?: number };
+  docstring?: string;
+  modifiers?: string[];
+}
+
+export interface ClassInfo {
+  name: string;
+  methods: FunctionInfo[];
+  properties: Array<{ name: string; type?: string }>;
+  superClass?: string;
+  decorators?: string[];
+  location: { start: number; end: number; line?: number; column?: number };
+  docstring?: string;
+}
+
 export interface ParsedFile {
-  id: string;
   path: string;
   language: string;
-  ast: ASTNode | null;
-  imports: Import[];
-  exports: Export[];
-  functions: FunctionDeclaration[];
-  classes: ClassDeclaration[];
-  variables: VariableDeclaration[];
-  parseError?: string;
+  imports: ImportStatement[];
+  exports: ExportStatement[];
+  functions: FunctionInfo[];
+  classes: ClassInfo[];
+  interfaces?: any[];
+  types?: any[];
+  constants?: any[];
+  enums?: any[];
 }
 
-export interface ASTNode {
-  type: string;
-  start: number;
-  end: number;
-  loc: {
-    start: { line: number; column: number };
-    end: { line: number; column: number };
-  };
-  [key: string]: any;
-}
-
+// Legacy parser types (keeping for backwards compatibility)
 export interface Import {
   source: string; // module path
   specifiers: string[]; // imported names
@@ -108,6 +132,17 @@ export interface ClassDeclaration {
   properties: string[];
   line: number;
   endLine: number;
+}
+
+export interface ASTNode {
+  type: string;
+  start: number;
+  end: number;
+  loc: {
+    start: { line: number; column: number };
+    end: { line: number; column: number };
+  };
+  [key: string]: any;
 }
 
 export interface VariableDeclaration {
